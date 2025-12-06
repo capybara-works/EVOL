@@ -10,11 +10,11 @@ class TestGitHubCollector:
     """Test cases for GitHubCollector class."""
     
     @pytest.fixture
-    def collector(self, mock_github_token):
+    def collector(self, test_db, mock_github_token):
         """Create a GitHubCollector instance for testing."""
         return GitHubCollector(
-            owner="test-owner",
-            repo="test-repo",
+            db=test_db,
+            project="test-owner/test-repo",
             token="fake_token_for_testing_12345"
         )
     
@@ -43,7 +43,8 @@ class TestGitHubCollector:
             # Simulate 3 failures
             mock_request.side_effect = Exception("API Error")
             
-            with pytest.raises(Exception, match="Failed to fetch"):
+            # The actual exception will be raised, not wrapped
+            with pytest.raises(Exception, match="API Error"):
                 collector._request("GET", "/test/endpoint")
             
             # Should retry 3 times
@@ -57,11 +58,13 @@ class TestGitHubCollector:
             mock_response.json.return_value = {"success": True}
             mock_response.raise_for_status = Mock()
             
+            # Set side_effect to list of responses
             mock_request.side_effect = [
                 Exception("Temporary error"),
                 mock_response
             ]
             
+            # Should succeed on second attempt
             result = collector._request("GET", "/test/endpoint")
             
             assert result == {"success": True}
@@ -72,9 +75,13 @@ class TestGitHubSyncOperations:
     """Test GitHub sync operations."""
     
     @pytest.fixture
-    def collector(self, mock_github_token):
+    def collector(self, test_db, mock_github_token):
         """Create collector instance."""
-        return GitHubCollector("test", "repo", "fake_token")
+        return GitHubCollector(
+            db=test_db,
+            project="test/repo",
+            token="fake_token"
+        )
     
     def test_sync_runs(self, collector):
         """Test syncing workflow runs."""

@@ -51,8 +51,8 @@ class TestAPIEndpoints:
         
         assert response.status_code == 200
         data = response.json()
-        assert isinstance(data, dict)
-        assert "total" in data or isinstance(data, list)
+        # API returns a list of LOC metrics
+        assert isinstance(data, list)
 
 
 class TestAPIPagination:

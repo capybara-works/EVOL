@@ -58,19 +58,22 @@ class TestCIRunModel:
         test_db.add(run)
         test_db.commit()
         
-        # Create CIRun
+        # Create CIRun with actual fields from model
         ci_run = CIRun(
             run_id="parent-run-123",
-            workflow_name="Test Workflow",
-            workflow_id="workflow-123",
-            external_id="external-456"
+            trigger="push",
+            duration_seconds=120.5,
+            default_branch="main",
+            tag_count=5,
+            branch_count=10
         )
         
         test_db.add(ci_run)
         test_db.commit()
         
         assert ci_run.run_id == "parent-run-123"
-        assert ci_run.workflow_name == "Test Workflow"
+        assert ci_run.trigger == "push"
+        assert ci_run.duration_seconds == 120.5
 
 
 class TestArtifactModel:
@@ -87,12 +90,12 @@ class TestArtifactModel:
         test_db.add(run)
         test_db.commit()
         
-        # Create Artifact
+        # Create Artifact with actual fields from model
         artifact = Artifact(
             artifact_id="artifact-123",
             run_id="run-with-artifact",
             name="test-artifact.zip",
-            artifact_type="binary",
+            file_type="binary",  # Correct field name
             size_bytes=1024
         )
         
