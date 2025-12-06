@@ -5,10 +5,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./evol.db")
+def get_database_url() -> str:
+    """Get database URL from environment or use default."""
+    return os.getenv("DATABASE_URL", "sqlite:///./evol.db")
+
+DATABASE_URL = get_database_url()
 
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
+    DATABASE_URL
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
