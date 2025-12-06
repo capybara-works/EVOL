@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 from evol.db.models import Run, Artifact
 from evol.db.database import get_database_url
+from evol.ui.auth import verify_credentials, get_auth_credentials
 
 # App setup
 app = FastAPI(title="EVOL Control Panel", version="1.1.0")
@@ -29,6 +30,15 @@ SessionLocal = sessionmaker(bind=engine)
 
 # Background task tracker
 active_tasks: Dict[str, Dict] = {}
+
+
+def get_optional_auth():
+    """Return auth dependency only if authentication is configured."""
+    if get_auth_credentials() is None:
+        # No auth configured - return dummy dependency that always returns None
+        return lambda: None
+    # Auth configured - use verification
+    return Depends(verify_credentials)
 
 
 def get_db_stats() -> Dict:
@@ -102,8 +112,11 @@ async def run_sync_task(project: str, include_disasm: bool = False):
 
 
 @app.get("/", response_class=HTMLResponse)
-async def dashboard(request: Request):
-    """Main dashboard page."""
+async def dashboard(
+    request: Request,
+    user: Optional[str] = Depends(get_optional_auth())
+):
+    """Main dashboard page with optional authentication."""
     stats = get_db_stats()
     
     # Check if Grafana is running
@@ -134,25 +147,42 @@ async def trigger_sync(
     background_tasks: BackgroundTasks,
     project: str,
     include_disasm: bool = False,
+    user: Optional[str] = Depends(get_optional_auth())
 ):
-    """Trigger GitHub sync."""
+    """Trigger a background sync task with optional authentication."""
+    task_id = f"sync-{project.replace('/', '-')}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    
+    # Store task info
+    active_tasks[task_id] = {
+        "status": "running",
+        "project": project,
+        "started_at": datetime.now(),
+        "include_disasm": include_disasm
+    }
+    
     if not project:
+        active_tasks[task_id]["status"] = "failed"
+        active_tasks[task_id]["error"] = "Project parameter required"
         return JSONResponse({"error": "Project parameter required"}, status_code=400)
     
     # Check if GITHUB_TOKEN is set
     if not os.getenv("GITHUB_TOKEN"):
+        active_tasks[task_id]["status"] = "failed"
+        active_tasks[task_id]["error"] = "GITHUB_TOKEN not set in environment"
         return JSONResponse(
             {"error": "GITHUB_TOKEN not set in environment"},
             status_code=400,
         )
     
-    background_tasks.add_task(run_sync_task, project, include_disasm)
+    # Run sync in background
+    background_tasks.add_task(run_sync_background, project, include_disasm, task_id)
     
     return JSONResponse(
         {
             "status": "started",
             "project": project,
             "message": f"Sync started for {project}",
+            "task_id": task_id,
         }
     )
 

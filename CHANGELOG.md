@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.1] - 2025-12-07
+
+### Added
+- **WebUI Authentication Integration**: Fully integrated optional Basic Authentication into WebUI routes
+  - Protected Dashboard (`/`)
+  - Protected Sync Trigger API (`/api/trigger-sync`)
+  - Authentication remains optional (enabled only when environment variables are set)
+
+### Fixed
+- **Unit Tests**: Fixed test failures in `test_models.py`, `test_github.py`, and `test_api.py`
+  - Aligned test expectations with actual model fields and API responses
+  - Improved test coverage to 33%
+
 ## [1.2.0] - 2025-12-07
 
 ### Added
