@@ -24,7 +24,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 # Database connection
-engine = create_engine(get_database_url())
+engine = create_engine(get_database_url(), connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine)
 
 # Background task tracker
