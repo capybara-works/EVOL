@@ -1,9 +1,11 @@
-# EVOL (Evolving Visual Observability Layer)
+# EVOL - Evolving Visual Observability Layer
+
+[![CI](https://github.com/capybara-works/EVOL/actions/workflows/ci.yml/badge.svg)](https://github.com/capybara-works/EVOL/actions/workflows/ci.yml)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **ソフトウェアとファームウェアの進化における不変の事実の記憶**
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/capybara-works/EVOL)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 概要
 

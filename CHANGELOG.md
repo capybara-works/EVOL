@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+---
+
+## [1.2.0] - 2025-12-07
+
+### Added
+- **pytest Unit Testing Framework**: Implemented comprehensive test infrastructure with 27% initial code coverage
+- **GitHub Actions CI/CD**: Automated testing and release workflows
+  - CI workflow: Tests on Python 3.10, 3.11, 3.12 with coverage reporting
+  - Release workflow: Automated package building and GitHub Releases on version tags
+- **WebUI Optional Authentication**: Basic HTTP authentication for WebUI (disabled by default)
+  - Environment variable configuration (`EVOL_UI_USERNAME`, `EVOL_UI_PASSWORD`)
+  - Timing-attack-resistant password comparison
+  - Fully backward compatible (no authentication by default)
+- Test directory structure (`tests/unit/`, `tests/integration/`)
+- Test fixtures and shared utilities (`tests/conftest.py`)
+- Unit tests for GitHub Collector, API endpoints, and database models
+
+### Changed
+- `pyproject.toml`: Added pytest and testing dependencies (pytest, pytest-cov, pytest-asyncio, pytest-mock)
+- `pyproject.toml`: Added pytest configuration section with coverage settings
+- `.env.example`: Added WebUI authentication environment variables (commented out by default)
+
+### Technical Details
+- Created `.github/workflows/ci.yml` for continuous integration
+- Created `.github/workflows/release.yml` for automated releases
+- Created `evol/ui/auth.py` with optional authentication middleware
+- Test coverage baseline: 27% (evol/db/database.py: 100%, evol/db/models.py: 99%, evol/api/main.py: 48%)
+
+### Backward Compatibility
+- ✅ No breaking changes
+- ✅ All v1.1 features continue to work unchanged
+- ✅ Authentication is optional and disabled by default
+
+---
+
 ## [1.1.0] - 2025-12-07
 
 ### Added
