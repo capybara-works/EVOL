@@ -62,6 +62,20 @@ cp .env.example .env
 alembic upgrade head
 ```
 
+## ⚡ クイックスタート（推奨）
+
+自動化スクリプトで簡単にセットアップ:
+
+```bash
+# 1. 自動セットアップ
+./quickstart.sh
+
+# 2. データ同期＋Grafana起動
+./sync_and_view.sh owner/repo
+```
+
+詳細な手順は以下を参照してください。
+
 ## 基本的な使い方
 
 ### 1. データ収集

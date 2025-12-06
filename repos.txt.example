@@ -1,0 +1,10 @@
+# EVOL Repository Configuration
+# List repositories to sync (one per line)
+# Format: owner/repository
+
+# Example:
+# capybara-works/EVOL
+# mycompany/firmware
+# mycompany/hardware-drivers
+
+# Add your repositories below:
