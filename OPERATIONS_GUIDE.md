@@ -657,3 +657,67 @@ fi
 ---
 
 **Note**: この手順書は継続的に更新されます。問題や改善提案があれば、GitHubでIssueを作成してください。
+
+---
+
+## 8. 開発者向け情報（v1.2+）
+
+### 8.1 テスト実行
+
+EVOL v1.2以降では、pytestによる自動テストをサポートしています。
+
+#### テストのインストール
+
+```bash
+# pytest関連パッケージのインストール
+python3 -m pip install pytest pytest-cov pytest-asyncio pytest-mock
+```
+
+#### テスト実行方法
+
+```bash
+# 全テスト実行
+python3 -m pytest
+
+# カバレッジ付き実行
+python3 -m pytest --cov=evol
+
+# カバレッジレポート（HTML形式）
+python3 -m pytest --cov=evol --cov-report=html
+# 結果はhtmlcov/index.htmlで確認
+
+# 特定のテストファイルのみ
+python3 -m pytest tests/unit/test_api.py -v
+```
+
+### 8.2 CI/CDパイプライン
+
+GitHub Actionsを使用して、以下のワークフローが自動化されています：
+
+- **CI (`ci.yml`)**:
+  - トリガー: `main`, `develop` ブランチへのプッシュおよびPR
+  - 内容: Python 3.10, 3.11, 3.12 でのテスト実行、Lintチェック、カバレッジ計測
+
+- **Release (`release.yml`)**:
+  - トリガー: `v*.*.*` タグのプッシュ
+  - 内容: パッケージビルド、GitHub Release作成
+
+### 8.3 WebUI認証設定
+
+EVOL v1.2以降、WebUIにBasic認証を設定できます（オプション）。
+
+**設定方法**:
+`.env`ファイルに以下の変数を追加します：
+
+```bash
+EVOL_UI_USERNAME=admin
+EVOL_UI_PASSWORD=your_secure_password
+```
+
+**保護されるルート**:
+- ダッシュボード (`/`)
+- 同期トリガーAPI (`/api/trigger-sync`)
+
+**注意**:
+- 変数が設定されていない場合、認証は無効になります（後方互換性）。
+- 本番環境ではHTTPSの使用を強く推奨します。
