@@ -1,6 +1,6 @@
 # EVOL 統合操作手順書
 
-**Version**: 1.0.0  
+**Version**: 1.1.0  
 **対象**: 運用担当者、開発者、QAエンジニア
 
 ---
@@ -129,7 +129,13 @@ nano .env  # または vim, code など
 ```bash
 DATABASE_URL=sqlite:///./evol.db
 GITHUB_TOKEN=your_github_pat_here
+EVOL_RETAIN_BINARIES=false  # オプション: ダウンロードしたバイナリを保持するか
 ```
+
+**環境変数の説明**:
+- `DATABASE_URL`: データベース接続文字列（デフォルト: SQLite）
+- `GITHUB_TOKEN`: GitHub Personal Access Token（必須）
+- `EVOL_RETAIN_BINARIES`: `true`の場合、逆アセンブリ後もバイナリファイルを削除しない（デフォルト: `false`）
 
 ### 2.4 データベースの初期化
 
@@ -296,7 +302,55 @@ curl "http://localhost:8000/api/v1/disasm?artifact_id=12345678-1234-1234-1234-12
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 
-### 4.2 Grafana経由での可視化
+### 4.2 WebUI経由での操作（v1.1+）
+
+#### WebUIの起動
+
+```bash
+# 起動スクリプトを使用（推奨）
+./start-ui.sh
+
+# または直接実行
+uvicorn evol.ui.app:app --host 127.0.0.1 --port 8080
+```
+
+**アクセス**:
+- URL: http://localhost:8080
+- 認証: なし（ローカル開発用）
+
+#### 主な機能
+
+**Control Panel ダッシュボード**:
+- **System Status**: Total Runs、Total Artifacts、Last Sync、Grafana稼働状態
+- **Quick Actions**: リポジトリ同期フォーム、Grafana/APIリンク
+- **Recent Syncs**: 最近の同期履歴（最新5件）
+
+**操作手順**:
+
+1. **リポジトリ同期**:
+   ```
+   - Project欄に `owner/repo` を入力
+   - （オプション）"Include Disassembly" にチェック
+   - "🔄 Sync Repository" ボタンをクリック
+   ```
+
+2. **Grafana表示**:
+   ```
+   - "📈 Open Grafana" ボタンをクリック
+   - 新しいタブでGrafanaダッシュボードが開く
+   ```
+
+3. **API Docs表示**:
+   ```
+   - "📖 API Docs" ボタンをクリック
+   - Swagger UIが開く
+   ```
+
+**自動更新**: ステータスは30秒ごとに自動更新されます
+
+**バックグラウンド実行**: 同期処理はバックグラウンドで実行され、ブラウザを閉じても継続します
+
+### 4.3 Grafana経由での可視化
 
 #### Grafanaの起動
 
