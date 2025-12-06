@@ -70,7 +70,11 @@ alembic upgrade head
 # 1. 自動セットアップ
 ./quickstart.sh
 
-# 2. データ同期＋Grafana起動
+# 2-A. WebUI（最も簡単）
+./start-ui.sh
+# ブラウザで http://localhost:8080 にアクセス
+
+# 2-B. CLIで同期＋Grafana起動
 ./sync_and_view.sh owner/repo
 ```
 
