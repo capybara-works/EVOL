@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EVOL Control Panel</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>🔍 EVOL Control Panel</h1>
+            <h1>EVOL Control Panel</h1>
             <span class="version">v1.1.0</span>
         </header>
 
@@ -28,9 +30,9 @@
                     <span class="stat-label">Last Sync</span>
                     <span class="stat-value" id="last-sync">
                         {% if stats.last_sync %}
-                            {{ stats.last_sync.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {{ stats.last_sync.strftime('%Y-%m-%d %H:%M:%S') }}
                         {% else %}
-                            Never
+                        Never
                         {% endif %}
                     </span>
                 </div>
@@ -38,9 +40,9 @@
                     <span class="stat-label">Grafana</span>
                     <span class="stat-value">
                         {% if grafana_running %}
-                            <span class="status-indicator running">● Running</span>
+                        <span class="status-indicator running">● Running</span>
                         {% else %}
-                            <span class="status-indicator stopped">● Stopped</span>
+                        <span class="status-indicator stopped">● Stopped</span>
                         {% endif %}
                     </span>
                 </div>
@@ -49,16 +51,11 @@
 
         <div class="actions-card">
             <h2>Quick Actions</h2>
-            
+
             <div class="action-section">
                 <h3>Sync GitHub Repository</h3>
                 <div class="sync-form">
-                    <input 
-                        type="text" 
-                        id="project-input" 
-                        placeholder="owner/repository"
-                        value="capybara-works/EVOL"
-                    >
+                    <input type="text" id="project-input" placeholder="owner/repository" value="capybara-works/EVOL">
                     <label class="checkbox-label">
                         <input type="checkbox" id="disasm-checkbox">
                         Include Disassembly
@@ -87,33 +84,34 @@
             <h2>Recent Syncs</h2>
             <div id="recent-syncs">
                 {% if stats.recent_runs %}
-                    <ul class="sync-list">
+                <ul class="sync-list">
                     {% for run in stats.recent_runs %}
-                        <li class="sync-item">
-                            <span class="sync-repo">{{ run.repo_id or 'Unknown' }}</span>
-                            <span class="sync-status status-{{ run.status }}">{{ run.status }}</span>
-                            <span class="sync-time">
-                                {% if run.started_at %}
-                                    {{ run.started_at.strftime('%m/%d %H:%M') }}
-                                {% endif %}
-                            </span>
-                        </li>
+                    <li class="sync-item">
+                        <span class="sync-repo">{{ run.repo_id or 'Unknown' }}</span>
+                        <span class="sync-status status-{{ run.status }}">{{ run.status }}</span>
+                        <span class="sync-time">
+                            {% if run.started_at %}
+                            {{ run.started_at.strftime('%m/%d %H:%M') }}
+                            {% endif %}
+                        </span>
+                    </li>
                     {% endfor %}
-                    </ul>
+                </ul>
                 {% else %}
-                    <p class="empty-message">No syncs yet. Start by syncing a repository!</p>
+                <p class="empty-message">No syncs yet. Start by syncing a repository!</p>
                 {% endif %}
             </div>
         </div>
 
         <footer>
-            <p>EVOL - Evolving Visual Observability Layer | 
-               <a href="https://github.com/capybara-works/EVOL" target="_blank">GitHub</a> |
-               <a href="/api/status">System Status API</a>
+            <p>EVOL - Evolving Visual Observability Layer |
+                <a href="https://github.com/capybara-works/EVOL" target="_blank">GitHub</a> |
+                <a href="/api/status">System Status API</a>
             </p>
         </footer>
     </div>
 
     <script src="/static/app.js"></script>
 </body>
+
 </html>
